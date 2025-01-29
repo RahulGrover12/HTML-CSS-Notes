@@ -4,27 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markdown Viewer</title>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.16/marked.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-color: #f6f8fa;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .markdown-body {
+            padding: 30px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Markdown Files</h1>
-    <button onclick="loadMarkdown('HTML.md')">HTML</button>
-    <button onclick="loadMarkdown('CSS.md')">CSS</button>
-    <button onclick="loadMarkdown('Advance-CSS.md')">Advance CSS</button>
 
-    <div id="content"></div>
+    <div class="container markdown-body">
+        <h2>Select a Markdown File:</h2>
+        <button onclick="loadMarkdown('HTML.md')">HTML</button>
+        <button onclick="loadMarkdown('CSS.md')">CSS</button>
+        <button onclick="loadMarkdown('Advance-CSS.md')">Advance CSS</button>
+
+        <hr>
+        <div id="content"></div>
+    </div>
 
     <script>
         function loadMarkdown(file) {
             fetch(file)
-                .then(response => response.text())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("File not found");
+                    }
+                    return response.text();
+                })
                 .then(text => {
                     document.getElementById("content").innerHTML = marked.parse(text);
+                })
+                .catch(error => {
+                    document.getElementById("content").innerHTML = `<p style="color:red;">Error loading file: ${file}</p>`;
                 });
         }
 
-        // Load default Markdown file (home)
-        loadMarkdown('HTML-CSS-Notes(@Rahul)');
+        loadMarkdown('Welcome to HTML-CSS Notes by RG');
     </script>
+
 </body>
 </html>
